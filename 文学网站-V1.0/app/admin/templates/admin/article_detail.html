@@ -1,0 +1,43 @@
+{% extends 'admin/inspect.html' %}
+
+{% block title %}
+    {{ post.title }}
+{% endblock title %}
+
+{% block breadcrumb %}
+    <nav class="breadcrumb is-small" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/">首页</a></li>
+            <li class="is-active"><a href="#" aria-current="page">{{ post.title }}</a></li>
+        </ul>
+    </nav>
+{% endblock breadcrumb %}
+
+{% block member %}
+<div class="pl-2">
+    <h1 class="is-size-3">
+        {{ post.title }}
+    </h1>
+    <p class="has-text-grey-light is-size-6 mt-1">
+        <span class="icon"><i class="mdi mdi-clipboard-text-clock-outline"></i></span>{{ post.add_date }}
+        <span class="icon"><i class="mdi mdi-tag-heart-outline"></i></span>{{ post.tags|join(',') }}
+    </p>
+    <pre style="white-space: pre-wrap; word-wrap: break-word;" class="content has-text-grey mt-1">{{ post.content|safe }}</pre>
+</div>
+<form action="" method="post" class="mt-4">
+    {{ form.csrf_token }}
+    <div class="is-block">
+        <div style="margin-top: 5px;">
+            <div style="float: left;margin-left: 10px;">
+                <a href="{{ url_for('admin.article_inspect') }}" class="button is-primary is-light mr-2">返回</a>               
+                <input type="submit" name="submit" value="合格" class=" button is-success">
+            </div>
+                
+            <div style="float: right;">
+                <p><a href="{{ url_for('admin.article_fail', post_id=post.id) }}" class=" is-danger button level-left">不合格</a></p>
+            </div>
+            
+        </div>
+    </div>
+</form>
+{% endblock member %}

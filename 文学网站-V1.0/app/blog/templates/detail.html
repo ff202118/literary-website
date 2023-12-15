@@ -1,0 +1,137 @@
+{% extends 'cate_list.html' %}
+
+{% block title %}
+    {{ post.title }}
+{% endblock title %}
+
+{% block breadcrumb %}
+    <nav class="breadcrumb is-small" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/">首页</a></li>
+            <li><a href="{{ url_for('blog.cates', cate_id=cate.id) }}">{{ cate.name }}</a></li>
+            <li class="is-active"><a href="#" aria-current="page">{{ post.title }}</a></li>
+        </ul>
+    </nav>
+{% endblock breadcrumb %}
+
+{% block cate_box %}
+<div class="pl-2">
+    <h1 class="is-size-3">
+        {{ post.title }}
+    </h1>
+    <p class="has-text-grey-light is-size-6 mt-1">
+        <span class="icon"><i class="mdi mdi-clipboard-text-clock-outline"></i></span>{{ post.add_date }}
+        <span class="icon"><i class="mdi mdi-shape-outline"></i></span>{{ post.category.name }}
+        <span class="icon"><i class="mdi mdi-tag-heart-outline"></i></span>{{ post.tags|join(',') }}
+    </p>
+    <pre style="white-space: pre-wrap; word-wrap: break-word;" class="content has-text-grey mt-1">{{post.content|safe}}</pre>
+</div>
+
+<hr>
+<div class="level">
+    <div class="level-left">
+        {% if prev_post %}
+            上一篇：<a href="{{ url_for('blog.detail', cate_id=prev_post.category.id, post_id=prev_post.id) }}">{{ prev_post.title }}</a>
+        {% endif %}
+    </div>
+    <div class="level-right">
+        {% if next_post %}
+            下一篇：<a href="{{ url_for('blog.detail', cate_id=next_post.category.id, post_id=next_post.id) }}">{{ next_post.title }}</a>
+        {% endif %}
+    </div>
+</div>
+
+
+<div class="dropdown-divider"></div>
+
+<div class="box is-shadowless">
+    <h1 class="is-size-4"> 留言内容</h1>
+    <!-- 消息闪现 -->
+    {% with messages = get_flashed_messages() %}
+     <b-message type="is-success">
+       {% if messages %}
+       <ul class=flashes>
+         {% for message in messages %}
+         <li>{{ message }}</li>
+         {% endfor %}
+       </ul>
+       {% endif %}
+     </b-message>
+    {% endwith %}
+
+    
+    {% for comment in comment_list %}
+    <article class="media">
+        <div class="media-content">
+          <div class="content">
+            用户 <strong>{{ comment.user.username }} </strong> 于<small>{{ comment.add_date }}</small> <small>发布留言：</small>
+              <br>
+            <pre style="white-space: pre-wrap; word-wrap: break-word;" >{{comment.content}}</pre>
+          </div>
+        </div>
+    </article>
+    {% endfor %}
+  <div class=" dropdown-divider"></div>
+  <div class="mt-3">
+    <nav class="pagination is-small" role="navigation" aria-label="pagination">
+      {% if pagination.has_prev %}
+      <a href="{{ url_for('blog.detail', cate_id=cate.id, post_id=post.id) }}?page={{ pagination.prev_num }}" class="pagination-上一页" title="This is the first page">上一页</a>
+      {% endif %}
+      {% if pagination.has_next %}
+      <a href="{{ url_for('blog.detail', cate_id=cate.id, post_id=post.id) }}?page={{ pagination.next_num }}" class="pagination-next">下一页</a>
+      {% endif %}
+      
+      <!-- 留言分页 -->
+      <ul class="pagination-list">        
+          {% for page in pagination.iter_pages() %}
+              {% if page %} 
+                  {% if page != pagination.page %}
+                  <li>
+                      <a href="{{ url_for('blog.detail', cate_id=cate.id, post_id=post.id) }}?page={{ page }}" class="pagination-link" aria-label="Page 1" aria-current="page">{{ page }}</a>
+                  </li>
+                  {% else %}
+                  <li>
+                      <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">{{ page }}</a>
+                  </li>
+                  {% endif %}
+              {% else %}
+                  <span class=pagination-ellipsis>&hellip;</span>
+              {% endif %}
+          {% endfor %}
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<div class=" dropdown-divider"></div>
+<div class="box">
+    <h1 class="is-size-4"> 发表留言</h1>
+    {% if g.user %}
+    <form action="" method="post">
+    {{ form.csrf_token }}
+    <article class="media" id="comment">
+        <div class="media-content">
+          <div class="field">
+            <p class="control">
+              {{ form.content(class="textarea", placeholder="请文明发言，为了方便联系作者，可以留下你的email。（为避免刷屏，留言最多200字）") }}
+            </p>
+          </div>
+          <nav class="level">
+            <div class="level-left">
+              <div style="margin-left: 870px;" class="level-item">
+                <input class="button is-info" type="submit" value="提交">
+              </div>
+            </div>
+          </nav>
+        </div>
+    </article>
+    </form>
+    {% else %}
+    <div>
+        请登录后发表留言!
+        <a href="{{ url_for('auth.login') }}">去登录</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock cate_box %}

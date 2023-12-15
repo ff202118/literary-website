@@ -1,0 +1,102 @@
+{% extends 'admin/index.html' %}
+
+{% block member %}
+<div class="is-block">
+    <div class=" is-pulled-left">
+        <h1 class=" is-size-4">
+            <span class="icon">
+                <i class="mdi mdi-receipt-outline"></i>
+            </span>
+            留言管理
+        </h1>
+    </div>
+
+    {% block button %}
+    {% endblock button %}
+    <div class="is-clearfix"></div>
+    <div class=" dropdown-divider"></div>
+
+    <!-- 消息闪现 -->
+    {% with messages = get_flashed_messages() %}
+    <b-message type="is-success">
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </b-message>
+    {% endwith %}
+</div>
+
+{% block table_content %}
+{% if comment_list %}
+
+{% for comment in comment_list %}
+<article class="media">
+    <div class="media-content">
+        <div class="content">
+            <p>
+                <strong>{{ comment.user.username }}于{{ comment.add_date }}</strong>对文章 <small>《 {{ comment.post.title }} 》</small>
+                <small>发表如下留言:</small>
+                <br>
+                {{ comment.content }}
+            </p>
+        </div>
+    </div>
+    <div class="media-right">
+        <a href="{{ url_for('blog.detail', cate_id=comment.post.category.id, post_id=comment.post.id) }}#comment"
+            class="tag is-success is-light">查看该文章</a>
+        
+        <a href="{{ url_for('admin.comment_del', comment_id=comment.id) }}" class="tag is-danger is-light" onclick="return confirmAction();">
+            <span class="icon">
+                <i class="mdi mdi-trash-can-outline"></i>
+            </span>
+            删除
+        </a>
+        <script>
+            function confirmAction() {
+                return confirm("确定要执行此操作吗？");
+            }
+        </script>
+    </div>
+</article>
+{% endfor %}
+
+{% else %}
+暂无任何留言
+{% endif %}
+
+<div class=" dropdown-divider"></div>
+<nav class="pagination is-small mt-3" role="navigation" aria-label="pagination">
+    {% if pagination.has_prev %}
+    <a href="{{ url_for('admin.comment') }}?page={{ pagination.prev_num }}" class="pagination-上一页"
+        title="This is the first page">上一页</a>
+    {% endif %}
+    {% if pagination.has_next %}
+    <a href="{{ url_for('admin.comment') }}?page={{ pagination.next_num }}" class="pagination-next">下一页</a>
+    {% endif %}
+
+    <ul class="pagination-list">
+        {% for page in pagination.iter_pages() %}
+        {% if page %}
+        {% if page != pagination.page %}
+        <li>
+            <a href="{{ url_for('admin.comment') }}?page={{ page }}" class="pagination-link" aria-label="Page 1"
+                aria-current="page">{{ page }}</a>
+        </li>
+        {% else %}
+        <li>
+            <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">{{ page }}</a>
+        </li>
+        {% endif %}
+        {% else %}
+        <span class=pagination-ellipsis>&hellip;</span>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+
+{% endblock table_content %}
+{% endblock member %}

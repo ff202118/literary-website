@@ -1,0 +1,91 @@
+{% extends 'admin/category.html' %}
+
+{% block button %}{% endblock button %}
+
+{% block table_content %}
+<form action="" method="post" class="mt-4" enctype="multipart/form-data">
+    
+    <div class="field">
+        {{ form.username.label(class='label') }}
+        <div class="control">
+            {{ form.username(class='input', placeholder='用户名') }}
+        </div>
+    </div>
+    {{ form.csrf_token }}
+    <!-- 消息闪现 -->
+    {% with messages = get_flashed_messages() %}
+    <b-message type="is-danger">
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </b-message>
+    {% endwith %}
+
+    <div class="field">
+        {{ form.password.label(class='label') }}
+        <div class="control">
+            {{ form.password(class='input', placeholder='密码') }}
+            <p class="help has-text-grey-light">
+                {{ form.password.description }}
+            </p>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="checkbox">
+            {{ form.is_super_user }}
+            {{ form.is_super_user.label }}
+        </label>
+    </div>
+    <div class="field">
+        <label class="checkbox">
+            {{ form.is_active }}
+            {{ form.is_active.label }}
+        </label>
+    </div>
+    <div class="field">
+        <label class="checkbox">
+            {{ form.is_staff }}
+            {{ form.is_staff.label }}
+        </label>
+    </div>
+    <div class="field">
+        <label class="checkbox" name="weekSelHistory" value="1">
+            {{ form.is_first_user }}
+            {{ form.is_first_user.label }}
+        </label>
+    </div>
+    <div class="field">
+        <label class="checkbox" name="weekSelHistory" value="2">
+            {{ form.is_second_user }}
+            {{ form.is_second_user.label }}
+        </label>
+    </div>
+    <div class="field">
+        <label class="checkbox" name="weekSelHistory" value="3">
+            {{ form.is_third_user }}
+            {{ form.is_third_user.label }}
+        </label>
+    </div>
+    <div class="field">
+        <label class="checkbox" name="weekSelHistory" value="4">
+            {{ form.is_fourth_user }}
+            {{ form.is_fourth_user.label }}
+        </label>
+    </div>
+
+    <div class="is-block">
+        <div class="box has-background-light is-shadowless level">
+            <button class=" is-danger button level-left">删除</button>
+            <div class="level-right">
+                <a href="{{ url_for('admin.user') }}" class="button is-primary is-light mr-2">返回</a>
+                <input type="submit" value="保存" class=" button is-success">
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock table_content %}

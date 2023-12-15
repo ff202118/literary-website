@@ -1,0 +1,31 @@
+{% extends 'userinfo.html' %}
+
+{% block member %}
+<template>
+    <b-tabs>
+        <b-tab-item label="我发表的留言" icon="account-outline">
+           {% if comment_list %}
+             {% for comment in comment_list %}
+                <article class="media">
+                    <div class="media-content">
+                      <div class="content">
+                        <p>
+                          于<strong>{{ comment.add_date }}</strong>对文章 <small>《 {{ comment.post.title }} 》</small> <small>发表如下留言:</small>
+                          <br>
+                          {{ comment.content }}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="media-right">
+                        <a href="{{ url_for('blog.detail', cate_id=comment.post.category.id, post_id=comment.post.id) }}#comment" class="button is-outlined is-success is-small">查看该文章</a>
+                    </div>
+                  </article>
+             {% endfor %}
+
+             {% else %}
+             暂未发表任何留言
+           {% endif %}
+        </b-tab-item>
+    </b-tabs>
+</template>
+{% endblock member %}

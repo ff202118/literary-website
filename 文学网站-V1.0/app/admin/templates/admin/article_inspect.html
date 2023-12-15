@@ -1,0 +1,108 @@
+{% extends 'admin/inspect.html' %}
+
+{% block member %}
+<div class="is-block">
+    <div class=" is-pulled-left">
+        <h1 class=" is-size-4">
+            <span class="icon">
+                <i class="mdi mdi-receipt-outline"></i>
+            </span>
+            文章管理
+        </h1>
+    </div>
+
+    <div class="is-clearfix"></div>
+    <div class=" dropdown-divider"></div>
+
+    <!-- 消息闪现 -->
+    {% with messages = get_flashed_messages() %}
+    <b-message type="is-success">
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </b-message>
+    {% endwith %}
+</div>
+
+{% block table_content %}
+<div class="table-container">
+    <table class="table is-fullwidth is-hoverable is-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>标题</th>
+                <th>归属分类</th>
+                <th>发布日期</th>
+                <th>作者ID</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {% for post in post_list %}
+            {% if post.category_id == inspect and not post.is_inspect%}
+            <tr>
+                <td>{{ post.id }}</td>
+                <td>{{ post.title }}</td>
+                {% if post.category_id==1 %}
+                    <td>茶余饭后</td>
+                {% elif post.category_id==2 %}
+                    <td>风花雪月</td>
+                {% elif post.category_id==3 %}
+                    <td>校园故事</td>
+                {% else %}
+                    <td>以诗会友</td>
+                {% endif %}
+                <td>{{ post.add_date }}</td>
+                <td>{{ post.user_id }}</td>
+                <td>
+                    <div class="tags">
+                        <a href="{{ url_for('admin.article_detail', post_id=post.id) }}" class="tag is-success is-light">
+                            <span class="icon">
+                                <i class="mdi mdi-square-edit-outline"></i>
+                            </span>
+                            审核
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+
+<nav class="pagination is-small" role="navigation" aria-label="pagination">
+    {% if pagination.has_prev %}
+    <a href="{{ url_for('admin.article_inspect') }}?page={{ pagination.prev_num }}" class="pagination-上一页" title="This is the first page">上一页</a>
+    {% endif %}
+    {% if pagination.has_next %}
+    <a href="{{ url_for('admin.article_inspect') }}?page={{ pagination.next_num }}" class="pagination-next">下一页</a>
+    {% endif %}
+
+    <ul class="pagination-list">        
+        {% for page in pagination.iter_pages() %}
+            {% if page %} 
+                {% if page != pagination.page %}
+                <li>
+                    <a href="{{ url_for('admin.article_inspect') }}?page={{ page }}" class="pagination-link" aria-label="Page 1" aria-current="page">{{ page }}</a>
+                </li>
+                {% else %}
+                <li>
+                    <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">{{ page }}</a>
+                </li>
+                {% endif %}
+            {% else %}
+                <span class=pagination-ellipsis>&hellip;</span>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+
+{% endblock table_content %}
+{% endblock member %}

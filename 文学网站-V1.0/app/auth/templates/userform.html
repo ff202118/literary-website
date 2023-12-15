@@ -1,0 +1,103 @@
+{% extends 'userinfo.html' %}
+
+{% block member %}
+<template>
+    <b-tabs>
+        <b-tab-item label="修改个人信息" icon="account-outline">
+            <form action="" method="post" class="mt-4" enctype="multipart/form-data">
+                {{ form.csrf_token }}
+                <div class="field">
+                    {{ form.username.label(class='label') }}
+                    <div class="control">
+                        {{ form.username(class='input', disabled="disabled", placeholder='用户名') }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    {{ form.password.label(class='label') }}
+                    <div class="control">
+                        {{ form.password(class='input', placeholder='密码') }}
+                        <p class="help has-text-grey-light">
+                            {{ form.password.description }}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    {{ form.gexing.label(class='label') }}
+                    <div class="control">
+                        {{ form.gexing(class='input', placeholder='个性签名') }}
+                        <p class="help has-text-grey-light">
+                            {{ form.gexing.description }}
+                        </p>
+                    </div>
+                </div>
+            
+                <div class="field">
+                    {{ form.desc.label(class='label') }}
+                    <div class="control">
+                        {{ form.desc(class='input', placeholder='个人简介') }}
+                        <p class="help has-text-grey-light">
+                            {{ form.desc.description }}
+                        </p>
+                    </div>
+                </div>
+        
+                <div class="field">
+                    {{ form.email.label(class='label') }}
+                    <div class="control">
+                        {{ form.email(class='input', placeholder='邮箱') }}
+                        <p class="help has-text-grey-light">
+                            {{ form.email.description }}
+                        </p>
+                    </div>
+                </div>
+        
+                <div class="field">
+                    {{ form.gender.label(class='label') }}
+                    <div class="control">
+                        {{ form.gender(class='select is-fullwidth', placeholder='性别') }}
+                        <p class="help has-text-grey-light">
+                            {{ form.gender.description }}
+                        </p>
+                    </div>
+                </div>
+        
+                <div class="field">
+                    {{ form.address.label(class='label') }}
+                    <div class="control">
+                        {{ form.address(class='input', placeholder='地址') }}
+                        <p class="help has-text-grey-light">
+                            {{ form.address.description }}
+                        </p>
+                    </div>
+                </div>
+        
+                <div class="field">
+                    {{ form.avatar.label(class='label', placeholder='地址') }}
+                    
+                    {% if user %}
+                    <img class="is-rounded" width="96px" height="96px" src="/admin/static/{{ user.avatar }}" alt="{{ user.username }}"> 
+                    {% endif %}
+
+                    <div class="control">
+                        {{ form.avatar(class='input') }}
+                        <p class="help has-text-grey-light">
+                            {{ form.avatar.description }}
+                        </p>
+                    </div>
+                </div>
+        
+                <div class="is-block">
+                    <div class="box has-background-light is-shadowless level">
+                        <div class="level-right">
+                            <a href="{{ url_for('auth.userinfo') }}" class="button is-primary is-light mr-2">返回</a>
+                            <input type="submit" value="保存" class=" button is-success">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </b-tab-item>
+    </b-tabs>
+</template>
+{% endblock member %}
